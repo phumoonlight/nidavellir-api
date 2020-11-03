@@ -4,7 +4,12 @@ import cors from 'cors'
 import bodyParser from 'body-parser'
 
 import { Config } from './config'
+import { Mongo } from './mongo'
 import { Tracer } from './middlewares/tracer.middleware'
+import { TagRouter } from './containers/comic/comic.router'
+
+Mongo.connect()
+
 // import { Database } from './database'
 
 // const docRef = db.collection('users').doc()
@@ -37,7 +42,8 @@ app.use(bodyParser.json())
 // add middlewares here.
 app.use(Tracer.traceRequest)
 // add router here.
-// router
+app.use('/comics', TagRouter.router)
+// app.use('/comics', TagRouter.router)
 
 app.get('/', (req, res) => res.status(200).json({
   status: 'ok',
