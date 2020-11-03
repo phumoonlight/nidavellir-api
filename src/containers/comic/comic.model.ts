@@ -5,7 +5,13 @@ import { ComicDocument } from '../../shared/interfaces/comic-document.interface'
 
 const COLLECTION_NAME = 'comics'
 const DEFAULT_THUMBNAIL = 'https://media.discordapp.net/attachments/727116403512967203/772363203136192512/download.jpg'
-const episodeChildSchema = new Schema({
+const schemaOptions: SchemaOptions = {
+  timestamps: {
+    createdAt: 'created_at',
+    updatedAt: 'updated_at',
+  },
+}
+const episodeSchemaDefinition: SchemaDefinition = {
   name: {
     type: String,
     default: 'untitled',
@@ -17,13 +23,8 @@ const episodeChildSchema = new Schema({
   liked_by: {
     type: [String],
   },
-}, {
-  _id: false,
-  timestamps: {
-    createdAt: 'created_at',
-    updatedAt: 'updated_at',
-  },
-})
+}
+const episodeSchema = new Schema(episodeSchemaDefinition, schemaOptions)
 const comicSchemaDefinition: SchemaDefinition = {
   ref_id: {
     type: String,
@@ -68,14 +69,8 @@ const comicSchemaDefinition: SchemaDefinition = {
     type: [String],
   },
   episode: {
-    type: [episodeChildSchema],
+    type: [episodeSchema],
   },
 }
-const schemaOptions: SchemaOptions = {
-  timestamps: {
-    createdAt: 'created_at',
-    updatedAt: 'updated_at',
-  },
-}
-const schema = new Schema(comicSchemaDefinition, schemaOptions)
-export const ComicModel = mongoose.model<ComicDocument>(COLLECTION_NAME, schema)
+const comicSchema = new Schema(comicSchemaDefinition, schemaOptions)
+export const ComicModel = mongoose.model<ComicDocument>(COLLECTION_NAME, comicSchema)
