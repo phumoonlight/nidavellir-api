@@ -1,15 +1,20 @@
 import admin from 'firebase-admin'
 
-import { Config } from './config'
+import { env } from './config'
 
-export namespace Firebase {
-  export const app = admin.initializeApp({
-    credential: admin.credential.cert({
-      projectId: Config.env.firebaseProjectId,
-      clientEmail: Config.env.firebaseClientEmail,
-      privateKey: Config.env.firebasePrivateKey,
-    }),
+const serviceAccount: admin.ServiceAccount = {
+  projectId: env.firebaseProjectId,
+  clientEmail: env.firebaseClientEmail,
+  privateKey: env.firebasePrivateKey,
+}
+let firebaseApp: admin.app.App
+
+export const initFirebaseApp = () => {
+  firebaseApp = admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
   })
+}
 
-  export const firestore = app.firestore()
+export const getFirestore = () => {
+  return firebaseApp.firestore()
 }
